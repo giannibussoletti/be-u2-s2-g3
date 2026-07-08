@@ -7,9 +7,12 @@ import gianni_bussoletti.be_u2_s2_g3.payloads.PasswordUpdatePayload;
 import gianni_bussoletti.be_u2_s2_g3.payloads.UserPayload;
 import gianni_bussoletti.be_u2_s2_g3.payloads.UserUpdatePayload;
 import gianni_bussoletti.be_u2_s2_g3.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,8 +34,14 @@ public class UserService {
         return this.userRepository.save(newUser);
     }
 
-    public List<User> getAll() {
-        return this.userRepository.findAll();
+    //SE invece ci List usiamo Page, possiamo creare una pagination
+    public Page<User> getAll(int page, int size, String orderBy) {
+        // Andando a creare un oggetto di tipo Pageable andiamo a comunicare con il client di voler creare una pagination
+//        L'oggetto pageable contiene diverse informazioni, per esempio il numero di pagine totali, utili al front-end
+//        la prima prorietà è il numero di pagine, il secondo è il numero massimo di risultati, e la terza è il sorting
+//        Tutti e tre possono essere parametrici
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.userRepository.findAll(pageable);
     }
 
     public User findById(UUID userId) {

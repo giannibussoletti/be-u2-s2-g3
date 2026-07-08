@@ -6,10 +6,10 @@ import gianni_bussoletti.be_u2_s2_g3.payloads.UserPayload;
 import gianni_bussoletti.be_u2_s2_g3.payloads.UserResponsePayload;
 import gianni_bussoletti.be_u2_s2_g3.payloads.UserUpdatePayload;
 import gianni_bussoletti.be_u2_s2_g3.services.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,8 +30,10 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return this.userService.getAll();
+    public Page<User> getUsers(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size,
+                               @RequestParam(defaultValue = "name") String orderBy) {
+        return this.userService.getAll(page, size, orderBy);
     }
 
     @GetMapping("/{userId}")
